@@ -1,9 +1,11 @@
+import * as eva from "@eva-design/eva";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { ApplicationProvider } from "@ui-kitten/components";
 import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
@@ -11,6 +13,7 @@ import { useColorScheme } from "react-native";
 import "react-native-gesture-handler";
 import CustomDrawerContent from "../components/Drawer/CustomDrawerContent";
 import Drawer from "../components/Drawer/Drawer";
+import uiKittenTheme from "../style-ui-kitten/custom-theme";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -35,10 +38,18 @@ export default function RootLayout() {
   return (
     <>
       {/* Keep the splash screen open until the assets have loaded. In the future, we should just support async font loading with a native version of font-display. */}
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        {!loaded && <SplashScreen />}
-        {loaded && <RootLayoutNav />}
-      </ThemeProvider>
+      <ApplicationProvider
+        {...eva}
+        theme={{ ...eva.light, ...uiKittenTheme }}
+        customMapping={eva.mapping}
+      >
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          {!loaded && <SplashScreen />}
+          {loaded && <RootLayoutNav />}
+        </ThemeProvider>
+      </ApplicationProvider>
     </>
   );
 }
